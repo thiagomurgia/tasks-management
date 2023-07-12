@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String?  @unique @default(uuid())
+  email                   String   @unique
+  password                String?
+  picProfile              String?
+  profileColor            String?  @default("#487f8a")
+  name                    String
+  emailTokenTActivate     String   @default(uuid())
+  responsibleEmail        String?
+  tokenToRedefinePassword Int?
+  userIsActive            Boolean  @default(false)
+  userProfile             String?  @default("0")
+  userXP                  Int      @default(0)
+  createdAt               DateTime @default(now())
+  updatedAt               String?
+
+  fatherId String?
+  father   User?   @relation("TeacherStudents", fields: [fatherId], references: [id])
+  children User[]  @relation("TeacherStudents")
+
+  tasks    Tasks[]
+  comments Comments[]
+
+  @@map("user")
+}
+
+model Tasks {
+  id           String   @unique @default(uuid())
+  title        String
+  description  String
+  attributedTo String
+  timeToFinish String
+  tasklevel    Int
+  done         Boolean  @default(false)
+  color        String   @default("#ffffff")
+  createdAt    DateTime @default(now())
+  updatedAt    String?
+
+  author   User?   @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  @@map("tasks")
+}
+
+model Comments {
+  id      String @unique @default(uuid())
+  comment String
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@map("comments")
+}

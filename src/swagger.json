@@ -1,0 +1,143 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Tarefizando",
+    "description": 
+      "Tarefizando, é um projeto de gestão de tarefas para organizar sua rotina e das pessoas que estão com você! Acreditamos que com esta ferramenta o seu dia será muito mais produtivo. Sobrando tempo para o que realmente importa."
+    ,
+    "termsOfService": "localhost:3333/terms",
+    "contact":{
+      "email": "tzoppeim@live.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers":[
+    {
+      "url":"http://localhost:3333/v1",
+      "description": "Documentação de teste"
+    }
+  ],
+
+  "paths": {
+    "/signup":{
+      "post":{
+        "summary": "Cadastro de usuário",
+        "description": "Essa rota é responsável por cadastrar um novo usuáro",
+        "tags": ["Users"],
+        "requestBody": {
+        "content": {
+          "application/json":{
+            "schema":{
+              "$ref":"#/components/schemas/User-Signup"
+            }
+      }
+          },
+        "required": true
+        }
+      }
+    },
+    "/auth":{
+      "post":{
+        "summary": "Autenticação de usuário",
+        "description": "Esta rota é responsável por autenticar um usuário",
+        "tags":["Users"],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref": "#components/schemas/User-Auth"
+              }
+            }
+          },
+          "required": true
+        }
+        
+      }
+    },
+
+    "/activate/:token_id":{
+      "get":{
+        "summary": "Ativação de usuário",
+        "description": "Esta rota é responsável por realizar a ativação de um usuário",
+        "tags":["Users"],
+        "parameters":[
+          {
+            "name": "user_id",
+            "in":"query",
+            "description": "Id do usuário para realizar a ativação",
+            "required":true
+          }
+        ]
+      }
+    },
+
+    "/forgotpassword":{
+      "post":{
+        "summary":"Redefinição de senha",
+        "description": "Esta rota é para realizar a redefinição da senha do usuário",
+        "tags":["Users"],
+        "security": [{"bearerAuth": []}],
+        "requestBody":{
+          "content":{
+          "application/json":{
+            "schema":{
+              "$ref": "#components/schemas/User-ForgotPass"
+            }
+          }
+        },
+          "required":true
+        }
+      }
+    }
+  },
+
+  "components":{
+    "schemas": {
+      "User-Signup":{
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+        "email": {
+          "type": "string"
+        },
+        "password":{
+          "type": "string"
+        }
+        }
+      },
+      "User-Auth" :{
+        "type": "object",
+        "properties":{
+          "email":{
+            "type": "string"
+          },
+          "password":{
+            "type":"string"
+          }
+        }
+      },
+      "User-ForgotPass" :{
+        "type": "object",
+        "properties":{
+          "email":{
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes":{
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat":"JWT"
+      }
+    }
+  }
+  
+}
